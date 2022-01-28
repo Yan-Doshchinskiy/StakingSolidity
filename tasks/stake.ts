@@ -1,14 +1,13 @@
 import { task } from "hardhat/config";
 
-task("transfer", "Transfer tokens")
-  .addParam("to", "recipient address")
+task("stake", "stake method")
   .addParam("amount", "tokens amount")
-  .setAction(async ({ to, amount }: { to: string; amount: string }, hre) => {
+  .setAction(async ({ amount }: { amount: string }, hre) => {
     const [signer] = await hre.ethers.getSigners();
     const instance = await hre.ethers.getContractAt(
-      "ShitcoinToken",
+      "StakingContract",
       process.env.CONTRACT_ADDRESS as string,
       signer
     );
-    await instance.transfer(to, amount);
+    await instance.stake(amount);
   });

@@ -1,7 +1,7 @@
 //SPDX-License-Identifier: Unlicense
 pragma solidity ^0.8.4;
 
-contract ShitcoinToken {
+contract StakeToken {
     // initial state
     address private _contractOwner;
     uint256 private _totalSupply;
@@ -23,8 +23,8 @@ contract ShitcoinToken {
     // contract constructor
     constructor() {
         _contractOwner = msg.sender;
-        _name = "Shitcoin Token";
-        _symbol = "SHT";
+        _name = "Stake Token";
+        _symbol = "LP";
         _decimals = 18;
     }
 
