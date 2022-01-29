@@ -45,4 +45,47 @@ export default (): void => {
     // const user = await this.instance.getStakerData(this.owner.address);
     expect(balance).to.be.equal("9000000000000000000000000");
   });
+  it("UNSTAKE:if the unstake amount is less than the total amount, then we can see the balance for one operations.", async function (): Promise<void> {
+    await this.stakeInstance.mint(
+      this.owner.address,
+      "9000000000000000000000000"
+    );
+    await this.stakeInstance.approve(
+      this.instance.address,
+      "9000000000000000000000000"
+    );
+
+    await this.instance.stake("3000000000000000000000000");
+
+    await this.instance.stake("3000000000000000000000000");
+    await this.instance.stake("3000000000000000000000000");
+    await this.instance.unstake("7000000000000000000000000");
+    const { operations } = await this.instance.getStakerData(
+      this.owner.address
+    );
+    expect(operations.length).to.be.equal(1);
+    expect(operations?.[0].amount).to.be.equal("2000000000000000000000000");
+  });
+  it("UNSTAKE:if the unstake amount is less than the total amount, then we can see the balance for two operations.", async function (): Promise<void> {
+    await this.stakeInstance.mint(
+      this.owner.address,
+      "9000000000000000000000000"
+    );
+    await this.stakeInstance.approve(
+      this.instance.address,
+      "9000000000000000000000000"
+    );
+
+    await this.instance.stake("3000000000000000000000000");
+
+    await this.instance.stake("3000000000000000000000000");
+    await this.instance.stake("3000000000000000000000000");
+    await this.instance.unstake("5000000000000000000000000");
+    const { operations } = await this.instance.getStakerData(
+      this.owner.address
+    );
+    expect(operations.length).to.be.equal(2);
+    expect(operations?.[0].amount).to.be.equal("1000000000000000000000000");
+    expect(operations?.[1].amount).to.be.equal("3000000000000000000000000");
+  });
 };
