@@ -74,7 +74,7 @@ const config: IConfig = {
     tests: "./test",
   },
   etherscan: {
-    apiKey: apiKey,
+    apiKey,
   },
   mocha: {
     timeout: 500000,
