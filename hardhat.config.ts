@@ -7,7 +7,8 @@ import "@nomiclabs/hardhat-waffle";
 import "@typechain/hardhat";
 import "hardhat-gas-reporter";
 import "solidity-coverage";
-import "./tasks/index.ts";
+import { ChainEnv, Chains } from "./interfaces/enums";
+import { NetworkUserConfig } from "hardhat/src/types/config";
 
 dotenv.config();
 
@@ -15,27 +16,19 @@ interface IConfig extends HardhatUserConfig {
   gasReporter?: EthGasReporterConfig;
 }
 
-const url = process.env.CHAIN_URL as string;
-const ownerPrivateKey = process.env.OWNER_PRIVATE_KEY as string;
-const secondSignerPrivateKey = process.env.SECOND_SIGNER_KEY as string;
-const accounts = [ownerPrivateKey, secondSignerPrivateKey].filter(
-  (account: string): boolean => !!account
-);
-const chainId = Number(process.env.CHAIN_ID as string) || 0;
-const reportGas = (process.env.REPORT_GAS as string) === "true";
-const apiKey = process.env.API_KEY as string;
-const lpToken = process.env.LP_TOKEN_ADDRESS as string;
-const rewardToken = process.env.REWARD_TOKEN_ADDRESS as string;
+const reportGas = process.env.REPORT_GAS === "true";
+const ethApiKey = process.env.API_KEY as string;
 
-type IEnvItem = { value: string | number; key: string };
+type IEnvItem = { value: string | number | undefined; key: string };
 
 const requiredEnvs: Array<IEnvItem> = [
-  { value: url, key: "CHAIN_URL" },
-  { value: ownerPrivateKey, key: "PRIVATE_KEY" },
-  { value: chainId, key: "CHAIN_ID" },
-  { value: apiKey, key: "API_KEY" },
-  { value: lpToken, key: "LP_TOKEN_ADDRESS" },
-  { value: rewardToken, key: "REWARD_TOKEN_ADDRESS" },
+  { value: process.env.API_KEY, key: "API_KEY" },
+  { value: process.env.RINKEBY_CHAIN_URL, key: "RINKEBY_CHAIN_URL" },
+  { value: process.env.RINKEBY_CHAIN_ID, key: "RINKEBY_CHAIN_ID" },
+  { value: process.env.RINKEBY_PRIVATE_KEY, key: "RINKEBY_PRIVATE_KEY" },
+  { value: process.env.STAKING_CONTRACT, key: "STAKING_CONTRACT" },
+  { value: process.env.REWARD_TOKEN_ADDRESS, key: "REWARD_TOKEN_ADDRESS" },
+  { value: process.env.STAKING_TOKEN_ADDRESS, key: "STAKING_TOKEN_ADDRESS" },
 ];
 
 requiredEnvs.forEach((item: IEnvItem): void => {
@@ -46,26 +39,29 @@ requiredEnvs.forEach((item: IEnvItem): void => {
   }
 });
 
+const getChainConfig = (chain: Chains): NetworkUserConfig => {
+  const url = process.env[`${ChainEnv[chain]}_CHAIN_URL`] as string;
+  const privateKey = process.env[`${ChainEnv[chain]}_PRIVATE_KEY`] as string;
+  const chainId = Number(process.env[`${ChainEnv[chain]}_CHAIN_ID`]);
+  return {
+    url,
+    accounts: [privateKey],
+    chainId,
+  };
+};
+
 const config: IConfig = {
   solidity: {
     version: "0.8.4",
-    settings: {
-      optimizer: {
-        enabled: true,
-        runs: 200,
-      },
-    },
   },
   networks: {
-    kovan: {
-      url,
-      accounts: accounts,
-      chainId: chainId,
-    },
+    [Chains.RINKEBY as string]: getChainConfig(Chains.RINKEBY),
+    // [Chains.BSC_TEST as string]: getChainConfig(Chains.BSC_TEST),
   },
   gasReporter: {
     enabled: reportGas,
     currency: "USD",
+    src: "./contracts",
   },
   paths: {
     artifacts: "./artifacts",
@@ -73,8 +69,9 @@ const config: IConfig = {
     sources: "./contracts",
     tests: "./test",
   },
+
   etherscan: {
-    apiKey,
+    apiKey: ethApiKey,
   },
   mocha: {
     timeout: 500000,

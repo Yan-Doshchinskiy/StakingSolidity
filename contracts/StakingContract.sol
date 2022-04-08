@@ -3,6 +3,8 @@ pragma solidity ^0.8.4;
 
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "./RewardERC20.sol";
+import "./StakeERC20.sol";
 
 contract StakingContract is AccessControl {
     // Staker struct
@@ -23,14 +25,15 @@ contract StakingContract is AccessControl {
     bytes32 private TREASURY_ROLE = keccak256("TREASURY_ROLE");
 
     // tokens
-    IERC20 private stakingToken;
-    IERC20 private rewardsToken;
+    StakeERC20 public stakingToken;
+    RewardERC20 public rewardsToken;
 
     // variables
-    address private treasury;
-    uint256 private distributionTime;
-    uint256 private earningPercent;
-    uint256 private totalStaked;
+    address public treasury;
+    uint256 public distributionTime;
+    uint256 public earningPercent;
+    uint256 public totalStaked;
+    int8 private decimalsRatio;
 
     // events
     event Staked(uint256 amount, uint256 time, address indexed sender);
@@ -48,31 +51,15 @@ contract StakingContract is AccessControl {
         _setupRole(TREASURY_ROLE, treasury);
         distributionTime = _distributionTime;
         earningPercent = _basePercent;
-        stakingToken = IERC20(_stakingToken);
-        rewardsToken = IERC20(_rewardsToken);
+        stakingToken = StakeERC20(_stakingToken);
+        rewardsToken = RewardERC20(_rewardsToken);
+        decimalsRatio =
+            int8(stakingToken.decimals()) -
+            int8(rewardsToken.decimals());
         treasury = address(this);
     }
 
     // view functions
-    function getTreasury() external view returns (address) {
-        return treasury;
-    }
-
-    function getTreasuryBalance() external view returns (uint256) {
-        return rewardsToken.balanceOf(treasury);
-    }
-
-    function getTotalStaked() external view returns (uint256) {
-        return totalStaked;
-    }
-
-    function getDistributionTime() external view returns (uint256) {
-        return distributionTime;
-    }
-
-    function getEarningPercent() external view returns (uint256) {
-        return earningPercent;
-    }
 
     function getStakerData(address _spender)
         external
@@ -95,6 +82,11 @@ contract StakingContract is AccessControl {
                 uint256 cyclesCount = uint256(stakingPeriod / distributionTime);
                 uint256 tokensAmount = (operations[i].amount * earningPercent) /
                     100;
+                if (decimalsRatio > 0) {
+                    tokensAmount = tokensAmount / 10**_absolute(decimalsRatio);
+                } else {
+                    tokensAmount = tokensAmount * 10**_absolute(decimalsRatio);
+                }
                 claimableAmount += cyclesCount * tokensAmount;
             }
         }
@@ -127,15 +119,9 @@ contract StakingContract is AccessControl {
         uint256 maxPercent = 40;
         require(
             _percent <= maxPercent,
-            "earning percent should be less than or equal to 40:"
+            "earning percent should be less than or equal to 40%"
         );
         earningPercent = _percent;
-    }
-
-    // provide function
-    function provideRewards(uint256 _amount) external onlyRole(OWNER_ROLE) {
-        require(_amount > 0, "Expected positive amount value");
-        rewardsToken.transferFrom(msg.sender, treasury, _amount);
     }
 
     // stake function
@@ -188,7 +174,7 @@ contract StakingContract is AccessControl {
     // utility functions
     function _claim() private {
         uint256 _claimable = getClaimableAmount(msg.sender);
-        rewardsToken.transfer(msg.sender, _claimable);
+        rewardsToken.mint(msg.sender, _claimable);
         StakerOperations[] storage operations = stakers[msg.sender].operations;
         for (uint256 i = 0; i < operations.length; i++) {
             uint256 stakingPeriod = block.timestamp - operations[i].stakeTime;
@@ -197,5 +183,9 @@ contract StakingContract is AccessControl {
             operations[i].stakeTime += time;
         }
         emit Claimed(_claimable, block.timestamp, msg.sender);
+    }
+
+    function _absolute(int8 _val) private pure returns (uint8) {
+        return _val >= 0 ? uint8(_val) : uint8(-_val);
     }
 }
