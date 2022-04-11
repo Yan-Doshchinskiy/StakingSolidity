@@ -153,11 +153,12 @@ contract StakingContract is AccessControl {
         staker.totalAmount -= _amount;
         uint256 amountToUnstake = _amount;
         while (amountToUnstake > 0) {
-            if ((amountToUnstake >= operations[0].amount)) {
-                amountToUnstake -= operations[0].amount;
+            uint256 lastIndex = operations.length - 1;
+            if ((amountToUnstake >= operations[lastIndex].amount)) {
+                amountToUnstake -= operations[lastIndex].amount;
                 operations.pop();
             } else {
-                operations[0].amount -= amountToUnstake;
+                operations[lastIndex].amount -= amountToUnstake;
                 amountToUnstake = 0;
             }
         }

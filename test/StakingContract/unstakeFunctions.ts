@@ -57,4 +57,45 @@ export default (): void => {
       "unstake amount should be less or equal then staker totalAmount"
     );
   });
+  it("STAKING-UNSTAKE: unstake function works correctly (completed with several stakes)", async function (): Promise<void> {
+    await this.stakingInstance.connect(this.user1).stake(this.stakeAmount1);
+    await this.stakingInstance.connect(this.user1).stake(this.stakeAmount1);
+    await this.stakingInstance.connect(this.user1).stake(this.stakeAmount3);
+    const { operations: operationsBefore } =
+      await this.stakingInstance.getStakerData(this.user1.address);
+    await this.stakingInstance.connect(this.user1).unstake(this.unstakeAmount3);
+    const { operations: operationsAfter } =
+      await this.stakingInstance.getStakerData(this.user1.address);
+    const SumOerationsBefore = operationsBefore.reduce(
+      (acc: BigNumber, rec: { amount: BigNumber; time: number }): BigNumber =>
+        acc.add(rec.amount),
+      BigNumber.from(0)
+    );
+    const SumOerationsAfter = operationsAfter.reduce(
+      (acc: BigNumber, rec: { amount: BigNumber; time: number }): BigNumber =>
+        acc.add(rec.amount),
+      BigNumber.from(0)
+    );
+    expect(SumOerationsBefore).to.be.equal(
+      SumOerationsAfter.add(this.unstakeAmount3)
+    );
+    const { operations: operationsBefore2 } =
+      await this.stakingInstance.getStakerData(this.user1.address);
+    await this.stakingInstance.connect(this.user1).unstake(this.unstakeAmount3);
+    const { operations: operationsAfter2 } =
+      await this.stakingInstance.getStakerData(this.user1.address);
+    const SumOerationsBefore2 = operationsBefore2.reduce(
+      (acc: BigNumber, rec: { amount: BigNumber; time: number }): BigNumber =>
+        acc.add(rec.amount),
+      BigNumber.from(0)
+    );
+    const SumOerationsAfter2 = operationsAfter2.reduce(
+      (acc: BigNumber, rec: { amount: BigNumber; time: number }): BigNumber =>
+        acc.add(rec.amount),
+      BigNumber.from(0)
+    );
+    expect(SumOerationsBefore2).to.be.equal(
+      SumOerationsAfter2.add(this.unstakeAmount3)
+    );
+  });
 };

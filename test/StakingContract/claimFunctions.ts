@@ -3,7 +3,7 @@ import { ethers } from "hardhat";
 import { BigNumber } from "ethers";
 
 export default (): void => {
-  it("STAKING-STAKE: claim function works correctly (completed)", async function (): Promise<void> {
+  it("STAKING-CLAIM: claim function works correctly (completed)", async function (): Promise<void> {
     await this.stakingInstance.connect(this.user1).stake(this.stakeAmount1);
     const balanceBefore = await this.rewardTokenInstance.balanceOf(
       this.user1.address
@@ -13,7 +13,6 @@ export default (): void => {
     const amount = await this.stakingInstance.getClaimableAmount(
       this.user1.address
     );
-    console.log("amount", amount);
     await this.stakingInstance.connect(this.user1).claim();
     const balanceAfter = await this.rewardTokenInstance.balanceOf(
       this.user1.address

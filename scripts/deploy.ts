@@ -4,9 +4,9 @@ import { getRewardTokenArguments } from "../arguments/RewardERC20";
 import { getStakingContractArguments } from "../arguments/StakingContract";
 
 // npx hardhat run --network rinkeby scripts/deploy.ts
-// npx hardhat verify --network rinkeby --constructor-args ./arguments/StakeERC20.ts 0xDB742682646617dDeaA99F0eBF447aba5C09a710
-// npx hardhat verify --network rinkeby --constructor-args ./arguments/RewardERC20.ts 0x2b49F291649D344867fd78f45796F03239e7D9CD
-// npx hardhat verify --network rinkeby --constructor-args ./arguments/StakingContract.ts 0x22c8580afDd0c9F558F3efB680A9FEB7199A4020
+// npx hardhat verify --network rinkeby --constructor-args ./arguments/StakeERC20.ts 0xF06e48A1786aa1D17BCacda9Cb08722487970ddC
+// npx hardhat verify --network rinkeby --constructor-args ./arguments/RewardERC20.ts 0x92C43a6CdE4EAe4fFaae44E15904BD34024F44B8
+// npx hardhat verify --network rinkeby --constructor-args ./arguments/StakingContract.ts 0x449B27A2237bed8ad7110E8f9b115f661Fab7c8e
 
 async function main(): Promise<void> {
   const [deployer] = await ethers.getSigners();

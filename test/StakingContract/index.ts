@@ -65,12 +65,12 @@ describe("Staking contract testing", async function () {
       .mint(this.user1.address, this.testMintAmount);
     await this.stakeTokenInstance
       .connect(this.user1)
-      .approve(this.stakingInstance.address, this.stakeAmount3);
+      .approve(this.stakingInstance.address, this.testMintAmount);
   });
   viewFunctions();
   distributionTimeFunctions();
   earningPercentFunctions();
   stakeFunctions();
-  unstakeFunctions();
   claimFunctions();
+  unstakeFunctions();
 });
