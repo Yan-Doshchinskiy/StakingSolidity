@@ -3,10 +3,10 @@ import argumentsStakeERC20 from "../arguments/StakeERC20";
 import { getRewardTokenArguments } from "../arguments/RewardERC20";
 import { getStakingContractArguments } from "../arguments/StakingContract";
 
-// npx hardhat run --network rinkeby scripts/deploy.ts
-// npx hardhat verify --network rinkeby --constructor-args ./arguments/StakeERC20.ts 0x17B5B59a78894C0Ff3d30ac9f1c3B02C16F7eDE7
-// npx hardhat verify --network rinkeby --constructor-args ./arguments/RewardERC20.ts 0xc13f39faA23dEb7476F74b5ddA5FdF3F01Aa0579
-// npx hardhat verify --network rinkeby --constructor-args ./arguments/StakingContract.ts 0xdFfF627165D0C6c3dE638d76Cd923d5E010a7Ff9
+// npx hardhat run --network goerli scripts/deploy.ts
+// npx hardhat verify --network goerli --constructor-args ./arguments/StakeERC20.ts 0x17B5B59a78894C0Ff3d30ac9f1c3B02C16F7eDE7
+// npx hardhat verify --network goerli --constructor-args ./arguments/RewardERC20.ts 0xc13f39faA23dEb7476F74b5ddA5FdF3F01Aa0579
+// npx hardhat verify --network goerli --constructor-args ./arguments/StakingContract.ts 0xdFfF627165D0C6c3dE638d76Cd923d5E010a7Ff9
 
 async function main(): Promise<void> {
   const [deployer] = await ethers.getSigners();

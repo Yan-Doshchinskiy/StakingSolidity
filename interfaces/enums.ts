@@ -3,11 +3,11 @@ export enum Roles {
 }
 
 export enum Chains {
-  RINKEBY = "rinkeby",
+  GOERLI = "goerli",
   BSC_TEST = "bscTestnet",
 }
 
 export enum ChainEnv {
-  "rinkeby" = "RINKEBY",
+  "goerli" = "GOERLI",
   "bscTestnet" = "BSC_TEST",
 }

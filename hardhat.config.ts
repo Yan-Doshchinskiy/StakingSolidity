@@ -23,10 +23,9 @@ type IEnvItem = { value: string | number | undefined; key: string };
 
 const requiredEnvs: Array<IEnvItem> = [
   { value: process.env.API_KEY, key: "API_KEY" },
-  { value: process.env.RINKEBY_CHAIN_URL, key: "RINKEBY_CHAIN_URL" },
-  { value: process.env.RINKEBY_CHAIN_ID, key: "RINKEBY_CHAIN_ID" },
-  { value: process.env.RINKEBY_PRIVATE_KEY, key: "RINKEBY_PRIVATE_KEY" },
-  { value: process.env.STAKING_CONTRACT, key: "STAKING_CONTRACT" },
+  { value: process.env.GOERLI_CHAIN_URL, key: "GOERLI_CHAIN_URL" },
+  { value: process.env.GOERLI_CHAIN_ID, key: "GOERLI_CHAIN_ID" },
+  { value: process.env.GOERLI_PRIVATE_KEY, key: "GOERLI_PRIVATE_KEY" },
   { value: process.env.REWARD_TOKEN_ADDRESS, key: "REWARD_TOKEN_ADDRESS" },
   { value: process.env.STAKING_TOKEN_ADDRESS, key: "STAKING_TOKEN_ADDRESS" },
 ];
@@ -55,7 +54,7 @@ const config: IConfig = {
     version: "0.8.4",
   },
   networks: {
-    [Chains.RINKEBY as string]: getChainConfig(Chains.RINKEBY),
+    [Chains.GOERLI as string]: getChainConfig(Chains.GOERLI),
     // [Chains.BSC_TEST as string]: getChainConfig(Chains.BSC_TEST),
   },
   gasReporter: {
