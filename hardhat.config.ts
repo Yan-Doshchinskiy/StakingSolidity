@@ -24,8 +24,8 @@ const accounts = [ownerPrivateKey, secondSignerPrivateKey].filter(
 const chainId = Number(process.env.CHAIN_ID as string) || 0;
 const reportGas = (process.env.REPORT_GAS as string) === "true";
 const apiKey = process.env.API_KEY as string;
-const lpToken = process.env.LP_TOKEN_ADDRESS as string;
-const rewardToken = process.env.REWARD_TOKEN_ADDRESS as string;
+// const lpToken = process.env.STAKING_TOKEN_ADDRESS as string;
+// const rewardToken = process.env.REWARD_TOKEN_ADDRESS as string;
 
 type IEnvItem = { value: string | number; key: string };
 
@@ -33,9 +33,9 @@ const requiredEnvs: Array<IEnvItem> = [
   { value: url, key: "CHAIN_URL" },
   { value: ownerPrivateKey, key: "PRIVATE_KEY" },
   { value: chainId, key: "CHAIN_ID" },
-  { value: apiKey, key: "API_KEY" },
-  { value: lpToken, key: "LP_TOKEN_ADDRESS" },
-  { value: rewardToken, key: "REWARD_TOKEN_ADDRESS" },
+  // { value: apiKey, key: "API_KEY" },
+  // { value: lpToken, key: "STAKING_TOKEN_ADDRESS" },
+  // { value: rewardToken, key: "REWARD_TOKEN_ADDRESS" },
 ];
 
 requiredEnvs.forEach((item: IEnvItem): void => {
@@ -57,7 +57,7 @@ const config: IConfig = {
     },
   },
   networks: {
-    kovan: {
+    sepolia: {
       url,
       accounts: accounts,
       chainId: chainId,
