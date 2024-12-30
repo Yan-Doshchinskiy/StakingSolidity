@@ -1,7 +1,7 @@
 //SPDX-License-Identifier: Unlicense
 pragma solidity ^0.8.4;
 
-contract StakeToken {
+contract StakingToken {
     // initial state
     address private _contractOwner;
     uint256 private _totalSupply;
@@ -23,8 +23,8 @@ contract StakeToken {
     // contract constructor
     constructor() {
         _contractOwner = msg.sender;
-        _name = "Stake Token";
-        _symbol = "LP";
+        _name = "Token For Staking";
+        _symbol = "FUCK";
         _decimals = 18;
     }
 

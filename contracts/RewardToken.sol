@@ -25,7 +25,7 @@ contract RewardToken {
         _contractOwner = msg.sender;
         _name = "Reward Token";
         _symbol = "SHT";
-        _decimals = 18;
+        _decimals = 12;
     }
 
     //modifiers
