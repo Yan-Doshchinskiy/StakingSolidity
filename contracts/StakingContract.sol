@@ -32,6 +32,10 @@ contract StakingContract is AccessControl {
     uint256 private earningPercent;
     uint256 private totalStaked;
 
+    uint256 private _decimals;
+    string private _name;
+    string private _symbol;
+
     // events
     event Staked(uint256 amount, uint256 time, address indexed sender);
     event Claimed(uint256 amount, uint256 time, address indexed sender);
@@ -51,9 +55,35 @@ contract StakingContract is AccessControl {
         stakingToken = IERC20(_stakingToken);
         rewardsToken = IERC20(_rewardsToken);
         treasury = address(this);
+
+        _decimals = 18;
+        _name = "LP FUCK Token";
+        _symbol = "wFuck";
+
     }
 
     // view functions
+
+    function name() external view returns (string memory) {
+        return _name;
+    }
+
+    function symbol() external view returns (string memory) {
+        return _symbol;
+    }
+
+    function decimals() external view returns (uint256) {
+        return _decimals;
+    }
+
+    function totalSupply() external view returns (uint256) {
+        return _getLpAmountByStake(totalStaked);
+    }
+
+    function balanceOf(address account) public view returns (uint256) {
+        return _getLpAmountByStake(stakers[account].totalAmount);
+    }
+
     function getTreasury() external view returns (address) {
         return treasury;
     }
@@ -197,5 +227,13 @@ contract StakingContract is AccessControl {
             operations[i].stakeTime += time;
         }
         emit Claimed(_claimable, block.timestamp, msg.sender);
+    }
+
+    function _getLpAmountByStake(uint256 _amount)
+    public
+    view
+    returns (uint256)
+    {
+        return _amount / 2;
     }
 }
